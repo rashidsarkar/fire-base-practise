@@ -6,6 +6,9 @@ function NavBar() {
       <nav className="p-4 bg-blue-500">
         <ul className="flex justify-end">
           <li className="mr-4">
+            <Link to="/">Home</Link>
+          </li>
+          <li className="mr-4">
             <Link to="/login">Login</Link>
           </li>
           <li className="mr-4">

@@ -4,6 +4,7 @@ import {
   createUserWithEmailAndPassword,
   onAuthStateChanged,
   signInWithEmailAndPassword,
+  signOut,
 } from "firebase/auth";
 import app from "../FireBASE/firebaseConfig.JS";
 const auth = getAuth(app);
@@ -12,33 +13,39 @@ export const AuthData = createContext(null);
 
 function AuthProvider({ children }) {
   const [user, setuser] = useState(null);
+  const [loaders, setLoaders] = useState(true);
   const regester = (email, password) => {
+    setLoaders(true);
     return createUserWithEmailAndPassword(auth, email, password);
   };
   //singIn
   const logIn = (email, password) => {
+    setLoaders(true);
     return signInWithEmailAndPassword(auth, email, password);
+  };
+  //sing out
+  const logOut = () => {
+    setLoaders(true);
+    signOut(auth).then().catch();
   };
   //on auth Change
   useEffect(() => {
     const unSubsribe = onAuthStateChanged(auth, (currentUser) => {
-      if (currentUser) {
-        // User is signed in, see docs for a list of available properties
-        // https://firebase.google.com/docs/reference/js/auth.user
-        setuser(currentUser);
-        // ...
-      } else {
-        // User is signed out
-        console.log("user Is Sing Out");
-        // ...
-      }
+      setuser(currentUser);
+      setLoaders(false);
     });
 
     return () => {
       unSubsribe();
     };
   }, []);
-  const contextValue = { regester, user, logIn };
+  const contextValue = {
+    regester,
+    user,
+    logOut,
+    loaders,
+    logIn,
+  };
   return (
     <AuthData.Provider value={contextValue}> {children}</AuthData.Provider>
   );

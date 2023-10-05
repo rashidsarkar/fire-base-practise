@@ -1,8 +1,11 @@
 import { useContext } from "react";
 import { AuthData } from "../AuthProvider/AuthProvider";
+import { useLocation, useNavigate } from "react-router-dom";
 
 function Login() {
   const { logIn } = useContext(AuthData);
+  const location = useLocation();
+  const navigate = useNavigate();
   const handleLogin = (event) => {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
@@ -11,11 +14,14 @@ function Login() {
     logIn(email, password)
       .then((result) => {
         console.log(result);
+        //navigate
+        navigate(location?.state || "/");
       })
       .catch((error) => {
         console.log(error);
       });
   };
+  console.log(location);
   return (
     <div className="flex items-center justify-center h-screen">
       <div className="w-1/4 p-4 border rounded-lg shadow-md">
